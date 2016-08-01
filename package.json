@@ -1,7 +1,7 @@
 {
   "name": "kakadu",
   "version": "1.0.1",
-  "description": "Прокси для быстрой адаптации стилями",
+  "description": "Прокси для быстрой адаптации сайта только стилями",
   "author": "Yunus Gaziev <yunus.gaziev@gmail.com> (https://github.com/yunusga)",
   "license": "MIT",
   "preferGlobal": true,
