@@ -1,0 +1,30 @@
+{
+  "name": "kakadu",
+  "version": "1.0.1",
+  "description": "Прокси для быстрой адаптации стилями",
+  "author": "Yunus Gaziev <yunus.gaziev@gmail.com> (https://github.com/yunusga)",
+  "license": "MIT",
+  "preferGlobal": true,
+  "private": true,
+  "engines": {
+    "node": ">=5.1.0"
+  },
+  "main": "./kakadu.js",
+  "bin": {
+    "kakadu": "./kakadu.js"
+  },
+  "dependencies": {
+    "browser-sync": "2.14.0",
+    "commander": "2.9.0",
+    "gulp": "3.9.1",
+    "gulp-autoprefixer": "3.1.0",
+    "gulp-group-css-media-queries": "1.1.0",
+    "gulp-plumber": "1.1.0",
+    "gulp-stylus": "2.5.0",
+    "gulp-util": "3.0.7",
+    "inquirer": "1.1.2",
+    "jsonfile": "2.3.1",
+    "node-notifier": "4.6.0",
+    "run-sequence": "1.2.2"
+  }
+}
