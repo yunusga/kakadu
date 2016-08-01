@@ -2,6 +2,9 @@
 
 Модуль для ускорения стилевой адаптации сайта
 
+## Установка
+* ```git clone https://github.com/yunusga/kakadu.git && cd kakadu && git pull --all && git checkout develop && npm i . -g && npm link```
+
 ## Как рабоатет?
 
 * создаем папку (желательно одноименную с сайтом)
