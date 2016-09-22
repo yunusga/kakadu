@@ -39,6 +39,15 @@ const questions    = [
 
             return 'Use only numbers';
         }
+    },
+    {
+        type: 'list',
+        name: 'tech',
+        message: 'What CSS pre-processor do you need?',
+        choices: ['Styl', 'Scss', 'Less'],
+        filter: function (val) {
+            return val.toLowerCase();
+        }
     }
 ];
 
