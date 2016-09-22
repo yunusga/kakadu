@@ -7,6 +7,8 @@ const gulp         = require('gulp');
 const util         = require('gulp-util');
 const plumber      = require('gulp-plumber');
 const stylus       = require('gulp-stylus');
+const less         = require('gulp-less');
+const scss         = require('gulp-sass');
 const autoprefixer = require('gulp-autoprefixer');
 const groupMq      = require('gulp-group-css-media-queries');
 const runSequence  = require('run-sequence');
@@ -52,6 +54,7 @@ const questions    = [
 ];
 
 let config  = {};
+let fileName = '';
 
 program
   .version(pkg.version)
@@ -68,18 +71,39 @@ let create_config = (path, config) => {
 
             console.log('Configuration file created');
 
-            fs.writeFileSync('_app.styl', '// hello kakadu project ' + config.host);
+            fs.writeFileSync(fileName, '// hello kakadu project ' + config.host);
 
             gulp.start('start');
         }
     });
 };
 
+let stylesPreProcessor = function() {
+
+    switch (config.tech) {
+
+        case 'styl':
+            return stylus();
+        break;
+
+        case 'scss':
+            return scss();
+        break;
+
+        case 'less':
+            return less();
+        break;
+
+        default:
+            console.log('Styles pre-processor error, no option in config');
+    }
+}
+
 gulp.task('styles', () => {
 
-    gulp.src('_app.styl')
+    gulp.src(fileName)
         .pipe(plumber())
-        .pipe(stylus())
+        .pipe(stylesPreProcessor())
         .pipe(autoprefixer({
             browsers: [
                 "last 2 version",
@@ -106,19 +130,19 @@ gulp.task('proxy-start', () => {
 
         proxy: config.host,
         serveStatic: ["./"],
-        files: "./_app.css",
+        files: "./app.css",
         snippetOptions: {
             rule: {
                 match: /<\/head>/i,
                 fn: function (snippet, match) {
-                    return '<link rel="stylesheet" type="text/css" href="/_app.css"/>' + snippet + match;
+                    return '<link rel="stylesheet" type="text/css" href="/app.css"/>' + snippet + match;
                 }
             }
         },
         port  : config.port
     });
 
-    gulp.watch('_app.styl', ['styles']);
+    gulp.watch(fileName, ['styles']);
 
 });
 
@@ -131,21 +155,27 @@ gulp.task('start', (done) => {
 
 var kakadu_init = () => {
 
-    fs.exists('config.json', function (exist) {
+    fs.exists('kakadu.json', function (exist) {
 
         if (exist) {
 
-            config = require(process.cwd() + '/config.json');
+            config = require(process.cwd() + '/kakadu.json');
+            fileName = 'app.' + config.tech;
             gulp.start('start');
 
         } else {
 
             inquirer.prompt(questions).then((answers) => {
 
-                config.host = answers.host;
-                config.port = answers.port;
+                config = {
+                    host : answers.host,
+                    port : answers.port,
+                    tech : answers.tech
+                };
 
-                create_config('config.json', config);
+                fileName = 'app.' + config.tech;
+
+                create_config('kakadu.json', config);
 
             });
 
