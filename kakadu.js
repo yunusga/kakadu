@@ -53,7 +53,14 @@ const questions    = [
     }
 ];
 
-let config  = {};
+let config  = {
+    ghostMode: {
+        clicks: true,
+        forms: true,
+        scroll: false
+    },
+    ui: false
+};
 let fileName = '';
 
 program
@@ -139,7 +146,13 @@ gulp.task('proxy-start', () => {
                 }
             }
         },
-        port  : config.port
+        port  : config.port,
+        ghostMode: {
+            clicks: config.ghostMode.clicks ? config.ghostMode.clicks : false,
+            forms: config.ghostMode.forms ? config.ghostMode.forms : false,
+            scroll: config.ghostMode.scroll ? config.ghostMode.forms : false
+        },
+        ui : config.ui ? config.ui : false
     });
 
     gulp.watch(fileName, ['styles']);
@@ -167,11 +180,9 @@ var kakadu_init = () => {
 
             inquirer.prompt(questions).then((answers) => {
 
-                config = {
-                    host : answers.host,
-                    port : answers.port,
-                    tech : answers.tech
-                };
+                config.host = answers.host;
+                config.port = answers.port;
+                config.tech = answers.tech;
 
                 fileName = 'app.' + config.tech;
 
