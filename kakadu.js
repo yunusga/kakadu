@@ -131,7 +131,7 @@ gulp.task('styles', () => {
         .pipe(bs.stream());
 });
 
-gulp.task('proxy-start', () => {
+gulp.task('proxy-start', (done) => {
 
     bs.init({
 
@@ -152,8 +152,13 @@ gulp.task('proxy-start', () => {
             forms: config.ghostMode.forms ? config.ghostMode.forms : false,
             scroll: config.ghostMode.scroll ? config.ghostMode.forms : false
         },
-        ui : config.ui ? config.ui : false
-    });
+        ui : config.ui ? config.ui : false,
+        notify         : true,
+        open           : true,
+        logLevel       : 'info',
+        logPrefix      : 'KAKADU',
+        logFileChanges : true
+    }, done);
 
     gulp.watch(fileName, ['styles']);
 
