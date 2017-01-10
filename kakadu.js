@@ -137,7 +137,7 @@ gulp.task('proxy-start', (done) => {
 
         proxy: config.host,
         serveStatic: ["./"],
-        files: "./app.css",
+        files: './app.css',
         snippetOptions: {
             rule: {
                 match: /<\/head>/i,
@@ -160,7 +160,7 @@ gulp.task('proxy-start', (done) => {
         logFileChanges : true
     }, done);
 
-    gulp.watch(fileName, ['styles']);
+    gulp.watch('./**/*.' + config.tech, ['styles']);
 
 });
 
