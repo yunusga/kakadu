@@ -2,7 +2,7 @@
 
 'use strict';
 
-const fs           = require('fs');
+const fs           = require('fs-extra');
 const gulp         = require('gulp');
 const util         = require('gulp-util');
 const plumber      = require('gulp-plumber');
@@ -12,12 +12,11 @@ const scss         = require('gulp-sass');
 const autoprefixer = require('gulp-autoprefixer');
 const groupMq      = require('gulp-group-css-media-queries');
 const runSequence  = require('run-sequence');
-const notifier     = require('node-notifier');
 const bs           = require('browser-sync').create();
 const program      = require('commander');
 const jsonfile     = require('jsonfile');
 const inquirer     = require('inquirer');
-const pkg          = require('./package.json');
+const pkg          = require('../package.json');
 const questions    = [
     {
         type: 'input',
@@ -137,12 +136,23 @@ gulp.task('proxy-start', (done) => {
 
         proxy: config.host,
         serveStatic: ["./"],
-        files: './app.css',
+        files: ['./app.css', './app.js'],
         snippetOptions: {
             rule: {
                 match: /<\/head>/i,
                 fn: function (snippet, match) {
-                    return '<link rel="stylesheet" type="text/css" href="/app.css"/>' + snippet + match;
+
+                    let scriptSnippet = '<script id="___kakadu___" type="text/javascript">' +
+                            'var ks = document.createElement("script");' +
+                            'ks.setAttribute("id", "___kakadu_script___");' +
+                            'ks.setAttribute("type", "text/javascript");' +
+                            'ks.src = "/app.js";' +
+                            'document.getElementsByTagName("head").item(0).appendChild(ks);' +
+                        '</script>';
+
+                    let cssSnippet = '<link rel="stylesheet" type="text/css" href="/app.css">';
+
+                    return cssSnippet + scriptSnippet + snippet + match;
                 }
             }
         },
