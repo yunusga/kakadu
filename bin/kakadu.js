@@ -52,14 +52,36 @@ const questions    = [
     }
 ];
 
-let config  = {
-    ghostMode: {
-        clicks: true,
-        forms: true,
-        scroll: false
+let config = {
+    kakadu : {
+        tech : 'styl'
     },
-    ui: false
+    bs : {
+        proxy          : null,
+        port           : 7200,
+        notify         : true,
+        open           : true,
+        logLevel       : 'info',
+        logPrefix      : 'KAKADU',
+        logFileChanges : true
+    },
+    autoprefixer : {
+        browsers : [
+            "last 2 version",
+            "ie >= 9",
+            "Android 2.3",
+            "Android >= 4",
+            "Chrome >= 20",
+            "Firefox >= 24",
+            "Explorer >= 8",
+            "iOS >= 6",
+            "Opera >= 12",
+            "Safari >= 6"
+        ],
+        cascade: true
+    }
 };
+
 let fileName = '';
 
 program
@@ -77,7 +99,8 @@ let create_config = (path, config) => {
 
             console.log('Configuration file created');
 
-            fs.writeFileSync(fileName, '// hello kakadu project ' + config.host);
+            fs.writeFileSync(fileName, '// hello kakadu project ' + config.bs.proxy);
+            fs.writeFileSync('app.js', '// hello kakadu project ' + config.bs.proxy);
 
             gulp.start('start');
         }
@@ -110,21 +133,7 @@ gulp.task('styles', () => {
     gulp.src(fileName)
         .pipe(plumber())
         .pipe(stylesPreProcessor())
-        .pipe(autoprefixer({
-            browsers: [
-                "last 2 version",
-                "ie >= 9",
-                "Android 2.3",
-                "Android >= 4",
-                "Chrome >= 20",
-                "Firefox >= 24",
-                "Explorer >= 8",
-                "iOS >= 6",
-                "Opera >= 12",
-                "Safari >= 6"
-            ],
-            cascade: true
-        }))
+        .pipe(autoprefixer(config.autoprefixer))
         .pipe(groupMq())
         .pipe(gulp.dest('.'))
         .pipe(bs.stream());
@@ -132,17 +141,16 @@ gulp.task('styles', () => {
 
 gulp.task('proxy-start', (done) => {
 
-    bs.init({
-
-        proxy: config.host,
-        serveStatic: ["./"],
-        files: ['./app.css', './app.js'],
-        snippetOptions: {
+    Object.assign(config.bs, {
+        serveStatic    : ["./"],
+        files          : ['./app.css', './app.js'],
+        snippetOptions : {
             rule: {
                 match: /<\/head>/i,
                 fn: function (snippet, match) {
 
-                    let scriptSnippet = '<script id="___kakadu___" type="text/javascript">' +
+                    let scriptSnippet = '' +
+                        '<script id="___kakadu___" type="text/javascript">' +
                             'var ks = document.createElement("script");' +
                             'ks.setAttribute("id", "___kakadu_script___");' +
                             'ks.setAttribute("type", "text/javascript");' +
@@ -155,20 +163,10 @@ gulp.task('proxy-start', (done) => {
                     return cssSnippet + scriptSnippet + snippet + match;
                 }
             }
-        },
-        port  : config.port,
-        ghostMode: {
-            clicks: config.ghostMode.clicks ? config.ghostMode.clicks : false,
-            forms: config.ghostMode.forms ? config.ghostMode.forms : false,
-            scroll: config.ghostMode.scroll ? config.ghostMode.forms : false
-        },
-        ui : config.ui ? config.ui : false,
-        notify         : true,
-        open           : true,
-        logLevel       : 'info',
-        logPrefix      : 'KAKADU',
-        logFileChanges : true
-    }, done);
+        }
+    });
+
+    bs.init(config.bs, done);
 
     gulp.watch('./**/*.' + config.tech, ['styles']);
 
@@ -195,9 +193,13 @@ var kakadu_init = () => {
 
             inquirer.prompt(questions).then((answers) => {
 
-                config.host = answers.host;
-                config.port = answers.port;
-                config.tech = answers.tech;
+                Object.assign(config, {
+                    bs : {
+                        proxy : answers.host,
+                        port : answers.port
+                    },
+                    tech : answers.tech
+                });
 
                 fileName = 'app.' + config.tech;
 
