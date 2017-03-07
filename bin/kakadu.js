@@ -9,6 +9,7 @@ const plumber      = require('gulp-plumber');
 const stylus       = require('gulp-stylus');
 const less         = require('gulp-less');
 const scss         = require('gulp-sass');
+const basicAuth    = require('basic-auth');
 const autoprefixer = require('gulp-autoprefixer');
 const groupMq      = require('gulp-group-css-media-queries');
 const runSequence  = require('run-sequence');
@@ -16,6 +17,7 @@ const bs           = require('browser-sync').create();
 const program      = require('commander');
 const jsonfile     = require('jsonfile');
 const inquirer     = require('inquirer');
+const chalk        = require('chalk');
 const pkg          = require('../package.json');
 const questions    = [
     {
@@ -85,10 +87,19 @@ let config = {
 let fileName = '';
 
 program
-  .version(pkg.version)
-  .option('-h, --host', 'Host for proxy')
-  .option('-p, --port', 'Proxy port')
-  .parse(process.argv);
+    .version(pkg.version)
+    .option('-a, --auth', 'enable basic access authentication')
+    .option('-u, --user [username]', 'set authentication user')
+    .option('-p, --pass [password]', 'set authentication password')
+    .parse(process.argv);
+
+if (program.auth) {
+
+    if (!program.user || !program.pass) {
+        util.log(`You are running ${chalk.bold.yellow('kakadu')} with basic auth but did not set the USER ${chalk.bold.yellow('-u')} and PASSWORD ${chalk.bold.yellow('-p')} with cli args.`);
+        process.exit(1);
+    }
+}
 
 let create_config = (path, config) => {
 
@@ -165,6 +176,26 @@ gulp.task('proxy-start', (done) => {
             }
         }
     });
+
+    if (program.auth) {
+
+        Object.assign(config.bs, {
+
+            middleware : function (req, res, next) {
+
+                let auth = basicAuth(req);
+
+                if (auth && auth.name === program.user && auth.pass === program.pass) {
+                    return next();
+                } else {
+                    res.statusCode = 401;
+                    res.setHeader('WWW-Authenticate', 'Basic realm="KAKADU Static Server"');
+                    res.end('Access denied');
+                }
+
+            }
+        });
+    }
 
     bs.init(config.bs, done);
 
