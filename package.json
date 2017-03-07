@@ -9,24 +9,26 @@
   "engines": {
     "node": ">=5.1.0"
   },
-  "main": "./kakadu.js",
   "bin": {
-    "kakadu": "./kakadu.js"
+    "kakadu": "bin/kakadu.js"
   },
   "dependencies": {
-    "browser-sync": "2.14.0",
+    "basic-auth": "1.1.0",
+    "browser-sync": "2.18.8",
     "commander": "2.9.0",
+    "fs-extra": "2.0.0",
     "gulp": "3.9.1",
-    "gulp-autoprefixer": "3.1.0",
-    "gulp-group-css-media-queries": "1.1.0",
-    "gulp-less": "3.1.0",
+    "gulp-autoprefixer": "3.1.1",
+    "gulp-group-css-media-queries": "1.2.0",
+    "gulp-header": "1.8.8",
+    "gulp-less": "3.3.0",
     "gulp-plumber": "1.1.0",
-    "gulp-sass": "2.3.2",
-    "gulp-stylus": "2.5.0",
-    "gulp-util": "3.0.7",
-    "inquirer": "1.1.2",
-    "jsonfile": "2.3.1",
-    "node-notifier": "4.6.0",
+    "gulp-sass": "3.1.0",
+    "gulp-stylus": "2.6.0",
+    "gulp-util": "3.0.8",
+    "inquirer": "3.0.6",
+    "jsonfile": "2.4.0",
+    "pretty-hrtime": "1.0.3",
     "run-sequence": "1.2.2"
   }
 }
