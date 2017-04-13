@@ -55,9 +55,6 @@ const questions    = [
 ];
 
 let config = {
-    kakadu : {
-        tech : 'styl'
-    },
     bs : {
         proxy          : null,
         port           : 7200,
