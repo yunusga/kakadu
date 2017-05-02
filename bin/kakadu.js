@@ -48,7 +48,7 @@ const questions    = [
         name: 'tech',
         message: 'What CSS pre-processor do you need?',
         choices: ['Styl', 'Scss', 'Less'],
-        filter: function (val) {
+        filter: (val) => {
             return val.toLowerCase();
         }
     }
@@ -85,9 +85,9 @@ let fileName = '';
 
 program
     .version(pkg.version)
-    .option('-a, --auth', 'enable basic access authentication')
-    .option('-u, --user [username]', 'set authentication user')
-    .option('-p, --pass [password]', 'set authentication password')
+    .option('-a, --auth', 'enable basic authentication')
+    .option('-u, --user [username]', 'set user')
+    .option('-p, --pass [password]', 'set password')
     .parse(process.argv);
 
 if (program.auth) {
@@ -115,7 +115,7 @@ let create_config = (path, config) => {
     });
 };
 
-let stylesPreProcessor = function() {
+let stylesPreProcessor = () => {
 
     switch (config.tech) {
 
@@ -155,7 +155,7 @@ gulp.task('proxy-start', (done) => {
         snippetOptions : {
             rule: {
                 match: /<\/head>/i,
-                fn: function (snippet, match) {
+                fn: (snippet, match) => {
 
                     let scriptSnippet = '' +
                         '<script id="___kakadu___" type="text/javascript">' +
@@ -178,7 +178,7 @@ gulp.task('proxy-start', (done) => {
 
         Object.assign(config.bs, {
 
-            middleware : function (req, res, next) {
+            middleware : (req, res, next) => {
 
                 let auth = basicAuth(req);
 
@@ -209,7 +209,7 @@ gulp.task('start', (done) => {
 
 var kakadu_init = () => {
 
-    fs.exists('kakadu.json', function (exist) {
+    fs.exists('kakadu.json', (exist) => {
 
         if (exist) {
 
