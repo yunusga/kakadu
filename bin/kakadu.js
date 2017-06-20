@@ -2,86 +2,33 @@
 
 'use strict';
 
-const fs           = require('fs-extra');
-const gulp         = require('gulp');
-const util         = require('gulp-util');
-const plumber      = require('gulp-plumber');
-const stylus       = require('gulp-stylus');
-const less         = require('gulp-less');
-const scss         = require('gulp-sass');
-const basicAuth    = require('basic-auth');
-const autoprefixer = require('gulp-autoprefixer');
-const groupMq      = require('gulp-group-css-media-queries');
-const runSequence  = require('run-sequence');
-const bs           = require('browser-sync').create();
-const program      = require('commander');
-const jsonfile     = require('jsonfile');
-const inquirer     = require('inquirer');
-const chalk        = require('chalk');
-const pkg          = require('../package.json');
-const questions    = [
-    {
-        type: 'input',
-        name: 'host',
-        message: 'Host for proxy'
-    },
-    {
-        type    : 'input',
-        name    : 'port',
-        message : 'Server port',
-        default : () => {
-            return '7200';
-        },
-        validate: (value) => {
+const path            = require('path');
+const fs              = require('fs-extra');
+const gulp            = require('gulp');
+const util            = require('gulp-util');
+const plumber         = require('gulp-plumber');
+const stylus          = require('gulp-stylus');
+const less            = require('gulp-less');
+const scss            = require('gulp-sass');
+const basicAuth       = require('basic-auth');
+const postcss         = require('gulp-postcss');
+const flexBugsFixes   = require('postcss-flexbugs-fixes');
+const focus           = require('postcss-focus');
+const discardComments = require('postcss-discard-comments');
+const inlineSvg       = require('postcss-inline-svg');
+const svgo            = require('postcss-svgo');
+const mqPacker        = require('css-mqpacker');
+const cssnano         = require('cssnano');
+const autoprefixer    = require('autoprefixer');
+const runSequence     = require('run-sequence');
+const bs              = require('browser-sync').create();
+const program         = require('commander');
+const chalk           = require('chalk');
+const pkg             = require('../package.json');
 
-            let check = value.match(/^\d+$/);
 
-            if (check) {
-                return true;
-            }
+let config = {};
 
-            return 'Use only numbers';
-        }
-    },
-    {
-        type: 'list',
-        name: 'tech',
-        message: 'What CSS pre-processor do you need?',
-        choices: ['Styl', 'Scss', 'Less'],
-        filter: (val) => {
-            return val.toLowerCase();
-        }
-    }
-];
-
-let config = {
-    bs : {
-        proxy          : null,
-        port           : 7200,
-        notify         : true,
-        open           : true,
-        logLevel       : 'info',
-        logPrefix      : 'KAKADU',
-        logFileChanges : true
-    },
-    autoprefixer : {
-        browsers : [
-            "last 2 version",
-            "ie >= 9",
-            "Android 2.3",
-            "Android >= 4",
-            "Chrome >= 20",
-            "Firefox >= 24",
-            "Explorer >= 8",
-            "iOS >= 6",
-            "Opera >= 12",
-            "Safari >= 6"
-        ],
-        cascade: true
-    }
-};
-
-let fileName = '';
 
 program
     .version(pkg.version)
@@ -89,6 +36,7 @@ program
     .option('-u, --user [username]', 'set user')
     .option('-p, --pass [password]', 'set password')
     .parse(process.argv);
+
 
 if (program.auth) {
 
@@ -98,29 +46,15 @@ if (program.auth) {
     }
 }
 
-let create_config = (path, config) => {
 
-    jsonfile.writeFile(path, config, { spaces : 2 }, (err) => {
-        if (err) {
-            console.error(err);
-        } else {
+const stylePreProcessor = (tech) => {
 
-            console.log('Configuration file created');
-
-            fs.writeFileSync(fileName, '// hello kakadu project ' + config.bs.proxy);
-            fs.writeFileSync('app.js', '// hello kakadu project ' + config.bs.proxy);
-
-            gulp.start('start');
-        }
-    });
-};
-
-let stylesPreProcessor = () => {
-
-    switch (config.tech) {
+    switch (tech) {
 
         case 'styl':
-            return stylus();
+            return stylus({
+                'include css': true
+            });
         break;
 
         case 'scss':
@@ -136,111 +70,98 @@ let stylesPreProcessor = () => {
     }
 }
 
+
 gulp.task('styles', () => {
 
-    gulp.src(fileName)
+    let plugins = [
+        discardComments(),
+        focus(),
+        mqPacker(),
+        inlineSvg(),
+        svgo(),
+        autoprefixer(config.kakadu.autoprefixer),
+        flexBugsFixes(),
+        cssnano()
+    ];
+
+    gulp.src('./**/*.' + config.kakadu.tech)
         .pipe(plumber())
-        .pipe(stylesPreProcessor())
-        .pipe(autoprefixer(config.autoprefixer))
-        .pipe(groupMq())
+        .pipe(stylePreProcessor(config.kakadu.tech))
+        .pipe(postcss(plugins))
         .pipe(gulp.dest('.'))
         .pipe(bs.stream());
 });
 
+
 gulp.task('proxy-start', (done) => {
 
-    Object.assign(config.bs, {
-        serveStatic    : ["./"],
-        files          : ['./app.css', './app.js'],
-        snippetOptions : {
-            rule: {
-                match: /<\/head>/i,
-                fn: (snippet, match) => {
+    bs.init(config.bs, done);
 
-                    let scriptSnippet = '' +
-                        '<script id="___kakadu___" type="text/javascript">' +
-                            'var ks = document.createElement("script");' +
-                            'ks.setAttribute("id", "___kakadu_script___");' +
-                            'ks.setAttribute("type", "text/javascript");' +
-                            'ks.src = "/app.js";' +
-                            'document.getElementsByTagName("head").item(0).appendChild(ks);' +
-                        '</script>';
+    gulp.watch('./**/*.' + config.kakadu.tech, ['styles']);
 
-                    let cssSnippet = '<link rel="stylesheet" type="text/css" href="/app.css">';
+});
 
-                    return cssSnippet + scriptSnippet + snippet + match;
-                }
-            }
-        }
+
+gulp.task('start', (done) => {
+    runSequence('proxy-start', 'styles', done);
+});
+
+
+gulp.task('copy-boilerplate', function(done) {
+
+    let stream = gulp.src([path.join(__dirname.replace('bin', ''), 'boilerplate', '**', '*.*')], { dot: true })
+        .pipe(gulp.dest(process.cwd()));
+
+    stream.on('end', function () {
+        done();
     });
 
-    if (program.auth) {
+    stream.on('error', function (err) {
+        done(err);
+    });
+});
 
-        Object.assign(config.bs, {
 
-            middleware : (req, res, next) => {
+const init = () => {
 
+    fs.exists('config.js', (exist) => {
+
+        if (exist) {
+
+            let authMiddleware = (req, res, next) => {
+                    
                 let auth = basicAuth(req);
 
                 if (auth && auth.name === program.user && auth.pass === program.pass) {
-                    return next();
+                    next();
                 } else {
                     res.statusCode = 401;
                     res.setHeader('WWW-Authenticate', 'Basic realm="KAKADU Static Server"');
                     res.end('Access denied');
                 }
+            },
+            middlewares = [];
 
+            if (program.auth) {
+                middlewares.push(authMiddleware);
             }
-        });
-    }
 
-    bs.init(config.bs, done);
+            config = require(process.cwd() + '/config.js');
 
-    gulp.watch('./**/*.' + config.tech, ['styles']);
+            if (config.bs.hasOwnProperty('middleware')) {
+                middlewares.push(config.bs.middleware);
+            }
 
-});
+            config.bs.middleware = middlewares;
 
-gulp.task('start', (done) => {
-
-    runSequence('proxy-start', 'styles', done);
-
-});
-
-
-var kakadu_init = () => {
-
-    fs.exists('kakadu.json', (exist) => {
-
-        if (exist) {
-
-            config = require(process.cwd() + '/kakadu.json');
-            fileName = 'app.' + config.tech;
             gulp.start('start');
 
         } else {
 
-            inquirer.prompt(questions).then((answers) => {
-
-                Object.assign(config, {
-                    bs : {
-                        proxy : answers.host,
-                        port : answers.port
-                    },
-                    tech : answers.tech
-                });
-
-                fileName = 'app.' + config.tech;
-
-                create_config('kakadu.json', config);
-
-            });
-
+            gulp.start('copy-boilerplate');
         }
-
+        
     });
-};
+}
 
-/*!
- * Запуск модуля
- */
-kakadu_init();
+init();
