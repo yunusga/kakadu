@@ -81,7 +81,7 @@ gulp.task('styles', () => {
         svgo(),
         autoprefixer(config.kakadu.autoprefixer),
         flexBugsFixes(),
-        cssnano()
+        cssnano(config.kakadu.cssnano)
     ];
 
     gulp.src('./**/*.' + config.kakadu.tech)
