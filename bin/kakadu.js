@@ -84,7 +84,7 @@ gulp.task('styles', () => {
         cssnano(config.kakadu.cssnano)
     ];
 
-    gulp.src('./**/*.' + config.kakadu.tech)
+    gulp.src('./*.{styl,scss,less}')
         .pipe(plumber())
         .pipe(stylePreProcessor(config.kakadu.tech))
         .pipe(postcss(plugins))
@@ -97,7 +97,7 @@ gulp.task('proxy-start', (done) => {
 
     bs.init(config.bs, done);
 
-    gulp.watch('./**/*.' + config.kakadu.tech, ['styles']);
+    gulp.watch('./**/*.{styl,scss,less}', ['styles']);
 
 });
 
