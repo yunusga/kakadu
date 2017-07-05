@@ -1,3 +1,5 @@
+'use strict';
+
 const kakadu = {
     tech : 'styl',
     autoprefixer : {
