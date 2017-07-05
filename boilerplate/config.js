@@ -16,7 +16,9 @@ const kakadu = {
             'Opera >= 12'
         ]
     },
-    cssnano : {}
+    cssnano : {
+        zindex: false
+    }
 };
 
 const browserSync = {
