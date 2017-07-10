@@ -36,5 +36,8 @@
     "postcss-inline-svg": "^3.0.0",
     "postcss-svgo": "^2.1.6",
     "run-sequence": "^1.2.2"
+  },
+  "dependencies": {
+    "gulp-group-css-media-queries": "1.2.0"
   }
 }
