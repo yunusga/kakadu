@@ -18,6 +18,7 @@ const discardComments = require('postcss-discard-comments');
 const inlineSvg       = require('postcss-inline-svg');
 const svgo            = require('postcss-svgo');
 const mqPacker        = require('css-mqpacker');
+const groupCssMQ      = require('gulp-group-css-media-queries');
 const cssnano         = require('cssnano');
 const autoprefixer    = require('autoprefixer');
 const runSequence     = require('run-sequence');
@@ -76,17 +77,18 @@ gulp.task('styles', () => {
     let plugins = [
         discardComments(),
         focus(),
-        mqPacker(),
         inlineSvg(),
         svgo(),
         autoprefixer(config.kakadu.autoprefixer),
         flexBugsFixes(),
+        //mqPacker(config.kakadu.mqpacker),
         cssnano(config.kakadu.cssnano)
     ];
 
     gulp.src('./*.{styl,scss,less}')
         .pipe(plumber())
         .pipe(stylePreProcessor(config.kakadu.tech))
+        .pipe(groupCssMQ())
         .pipe(postcss(plugins))
         .pipe(gulp.dest('.'))
         .pipe(bs.stream());
