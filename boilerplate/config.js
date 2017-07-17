@@ -1,7 +1,7 @@
 'use strict';
 
 const kakadu = {
-    tech : 'styl',
+    tech : '<%- tech %>',
     autoprefixer : {
         browsers : [
             'last 2 version',
@@ -24,8 +24,8 @@ const kakadu = {
 const browserSync = {
     serveStatic    : ['./'],
     files          : ['./**/*.js', './**/*.css'],
-    proxy          : null,
-    port           : 7200,
+    proxy          : '<%- proxy %>',
+    port           : <%- port %>,
     notify         : true,
     open           : true,
     logLevel       : 'info',
