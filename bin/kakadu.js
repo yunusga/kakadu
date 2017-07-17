@@ -80,9 +80,7 @@ gulp.task('styles', () => {
         inlineSvg(),
         svgo(),
         autoprefixer(config.kakadu.autoprefixer),
-        flexBugsFixes(),
-        //mqPacker(config.kakadu.mqpacker),
-        cssnano(config.kakadu.cssnano)
+        flexBugsFixes()
     ];
 
     gulp.src('./*.{styl,scss,less}')
