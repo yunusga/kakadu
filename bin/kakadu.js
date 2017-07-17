@@ -7,6 +7,9 @@ const fs              = require('fs-extra');
 const gulp            = require('gulp');
 const util            = require('gulp-util');
 const plumber         = require('gulp-plumber');
+const replace         = require('gulp-replace');
+const rename          = require('gulp-rename');
+const gulpIf          = require('gulp-if');
 const stylus          = require('gulp-stylus');
 const less            = require('gulp-less');
 const scss            = require('gulp-sass');
@@ -119,6 +122,12 @@ gulp.task('start', (done) => {
 gulp.task('copy-boilerplate', function(done) {
 
     let stream = gulp.src([path.join(__dirname.replace('bin', ''), 'boilerplate', '**', '*.*')], { dot: true })
+        .pipe(replace('<%- proxy %>', program.proxy))
+        .pipe(replace('<%- port %>', program.port.toString()))
+        .pipe(replace('<%- tech %>', program.tech))
+        .pipe(gulpIf('app.styl', rename({
+            extname: `.${program.tech}`
+        })))
         .pipe(gulp.dest(process.cwd()));
 
     stream.on('end', function () {
