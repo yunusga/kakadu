@@ -12,7 +12,7 @@ git remote set-url origin https://github.com/tazau/kakadu.git
 ### Содержание
 - [Установка](#Установка)
 - [Начало работы](#Начало-работы)
-- [Параметры CLI](#Параметры-CLI)
+- [Параметры CLI](#Параметры-cli)
 
 ## Установка
 * ```git clone https://github.com/yunusga/kakadu.git && cd kakadu && npm i . -g && npm link```

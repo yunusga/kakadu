@@ -37,10 +37,10 @@ program
     .version(pkg.version)
     .option('-u, --user [username]', 'set user')
     .option('-p, --pass [password]', 'set password')
-    .option('--proxy [url]', 'Set URL for proxy')
-    .option('--port <n>', 'Set port for proxy', 7200)
-    .option('--tech [tech]', 'Set tech for styles pre-processor (styl, scss, less)', /^(styl|scss|less)$/i, 'styl')
-    .option('--nano', 'Enable cssnano')
+    .option('--proxy [url]', 'URL for proxy')
+    .option('--port <n>', 'port for proxy', 7200)
+    .option('--tech [tech]', 'tech for styles pre-processor (styl, scss, less)', /^(styl|scss|less)$/i, 'styl')
+    .option('--nano', 'enable cssnano')
     .parse(process.argv);
 
 
