@@ -17,7 +17,6 @@ const focus           = require('postcss-focus');
 const discardComments = require('postcss-discard-comments');
 const inlineSvg       = require('postcss-inline-svg');
 const svgo            = require('postcss-svgo');
-const mqPacker        = require('css-mqpacker');
 const groupCssMQ      = require('gulp-group-css-media-queries');
 const cssnano         = require('cssnano');
 const autoprefixer    = require('autoprefixer');
