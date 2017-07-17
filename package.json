@@ -1,6 +1,6 @@
 {
   "name": "kakadu",
-  "version": "2.5.8",
+  "version": "2.7.10",
   "description": "Модуль для локальных-тестовых изменений удалённого сайта (отладка скриптов, адаптация и т.п.)",
   "author": "Yunus Gaziev <yunus.gaziev@gmail.com> (https://github.com/yunusga)",
   "license": "MIT",
