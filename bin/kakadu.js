@@ -36,6 +36,7 @@ program
     .option('-a, --auth', 'enable basic authentication')
     .option('-u, --user [username]', 'set user')
     .option('-p, --pass [password]', 'set password')
+    .option('--nano', 'Enable cssnano')
     .parse(process.argv);
 
 
@@ -82,6 +83,13 @@ gulp.task('styles', () => {
         autoprefixer(config.kakadu.autoprefixer),
         flexBugsFixes()
     ];
+
+    /**
+     * Включение cssnano для оптимизации стилей проекта
+     */
+    if (program.nano) {
+        plugins.push(cssnano(config.kakadu.cssnano));
+    }
 
     gulp.src('./*.{styl,scss,less}')
         .pipe(plumber())
