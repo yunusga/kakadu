@@ -33,17 +33,16 @@ let config = {};
 
 program
     .version(pkg.version)
-    .option('-a, --auth', 'enable basic authentication')
     .option('-u, --user [username]', 'set user')
     .option('-p, --pass [password]', 'set password')
     .option('--nano', 'Enable cssnano')
     .parse(process.argv);
 
 
-if (program.auth) {
+if (program.user || program.pass) {
 
     if (!program.user || !program.pass) {
-        util.log(`You are running ${chalk.bold.yellow('kakadu')} with basic auth but did not set the USER ${chalk.bold.yellow('-u')} and PASSWORD ${chalk.bold.yellow('-p')} with cli args.`);
+        util.log(`You are running ${chalk.bold.yellow('kakadu')} with basic auth but did not set the USER ${chalk.bold.yellow('-u')} or PASSWORD ${chalk.bold.yellow('-p')} with cli args.`);
         process.exit(1);
     }
 }
