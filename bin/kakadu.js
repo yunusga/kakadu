@@ -29,27 +29,34 @@ const program         = require('commander');
 const chalk           = require('chalk');
 const pkg             = require('../package.json');
 
+const password        = require('generate-password').generate({length: 7, numbers: true});
+const getAuthParams   = (params) => params.split('@');
 
 let config = {};
 
 
 program
     .version(pkg.version)
-    .option('-u, --user [username]', 'set user')
-    .option('-p, --pass [password]', 'set password')
+    .option('-a, --auth [user@password]', `set user@password for authorization [${pkg.name}@${password}]`, `${pkg.name}@${password}`)
     .option('--proxy [url]', 'URL for proxy')
     .option('--port <n>', 'port for proxy', 7200)
     .option('--tech [tech]', 'tech for styles pre-processor (styl, scss, less)', /^(styl|scss|less)$/i, 'styl')
     .option('--nano', 'enable cssnano')
     .parse(process.argv);
 
-
-if (program.user || program.pass) {
-
-    if (!program.user || !program.pass) {
-        util.log(`You are running ${chalk.bold.yellow('kakadu')} with basic auth but did not set the USER ${chalk.bold.yellow('-u')} or PASSWORD ${chalk.bold.yellow('-p')} with cli args.`);
-        process.exit(1);
-    }
+/**
+ * Проверка правильности установки логина и пароля для авторизации
+ */
+if (program.auth && getAuthParams(program.auth).length !== 2) {
+    console.log(`\n ${chalk.bold.yellow(pkg.name.toUpperCase())} запущен в режиме авторизации\n неправильно установлены ${chalk.bold.yellow('user@password')}`);
+    console.log(`\n ${chalk.bold.green('наберите:')} ${pkg.name} --help для справки`);
+    process.exit(1);
+} else if (program.auth && getAuthParams(program.auth).length === 2) {
+    console.log(`\n ${chalk.bold.yellow(pkg.name.toUpperCase())} запущен в режиме авторизации`);
+    console.log(chalk.gray('-------------------------------------'));
+    console.log(` ${chalk.bold.green(' логин:')} ${getAuthParams(program.auth)[0]}`);
+    console.log(` ${chalk.bold.green('пароль:')} ${getAuthParams(program.auth)[1]}`);
+    console.log(chalk.gray('-------------------------------------\n'));
 }
 
 
@@ -150,7 +157,7 @@ const init = () => {
                     
                 let auth = basicAuth(req);
 
-                if (auth && auth.name === program.user && auth.pass === program.pass) {
+                if (auth && auth.name === getAuthParams(program.auth)[0] && auth.pass === getAuthParams(program.auth)[1]) {
                     next();
                 } else {
                     res.statusCode = 401;
@@ -160,7 +167,7 @@ const init = () => {
             },
             middlewares = [];
 
-            if (program.auth) {
+            if (program.auth && getAuthParams(program.auth).length === 2) {
                 middlewares.push(authMiddleware);
             }
 
