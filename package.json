@@ -14,9 +14,8 @@
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
-    "basic-auth": "^1.1.0",
     "browser-sync": "^2.18.13",
-    "bs-auth": "1.1.3",
+    "bs-auth": "^1.1.3",
     "chalk": "^2.0.1",
     "commander": "^2.11.0",
     "cssnano": "^3.10.0",
