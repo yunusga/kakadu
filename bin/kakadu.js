@@ -27,7 +27,7 @@ const bs              = require('browser-sync').create();
 const program         = require('commander');
 const chalk           = require('chalk');
 const pkg             = require('../package.json');
-const getAuthParams   = (params) => params.split('@');
+const getAuthParams   = (params) => typeof params !== 'string' ? [pkg.name, false] : params.split('@');
 
 let config = {};
 
