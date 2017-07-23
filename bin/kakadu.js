@@ -13,7 +13,6 @@ const gulpIf          = require('gulp-if');
 const stylus          = require('gulp-stylus');
 const less            = require('gulp-less');
 const scss            = require('gulp-sass');
-const basicAuth       = require('basic-auth');
 const postcss         = require('gulp-postcss');
 const flexBugsFixes   = require('postcss-flexbugs-fixes');
 const focus           = require('postcss-focus');
