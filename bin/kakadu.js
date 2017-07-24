@@ -24,7 +24,7 @@ const cssnano         = require('cssnano');
 const autoprefixer    = require('autoprefixer');
 const runSequence     = require('run-sequence');
 const bs              = require('browser-sync').create();
-const program         = require('commander');
+const CLI             = require('commander');
 const chalk           = require('chalk');
 const pkg             = require('../package.json');
 const getAuthParams   = (params) => typeof params !== 'string' ? [pkg.name, false] : params.split('@');
@@ -32,7 +32,7 @@ const getAuthParams   = (params) => typeof params !== 'string' ? [pkg.name, fals
 let config = {};
 
 
-program
+CLI
     .version(pkg.version)
     .option('-a, --auth [user@password]', `установка логина и пароля для авторизации`)
     .option('--proxy [url]', 'URL для прокси')
@@ -45,11 +45,11 @@ program
 /**
  * Проверка правильности установки логина и пароля для авторизации
  */
-if (program.auth) {
+if (CLI.auth) {
 
     bs.use(require('bs-auth'), {
-        user: getAuthParams(program.auth)[0],
-        pass: getAuthParams(program.auth)[1]
+        user: getAuthParams(CLI.auth)[0],
+        pass: getAuthParams(CLI.auth)[1]
     });
 }
 
@@ -93,7 +93,7 @@ gulp.task('styles', () => {
     /**
      * Включение cssnano для оптимизации стилей проекта
      */
-    if (program.nano) {
+    if (CLI.nano) {
         plugins.push(cssnano(config.kakadu.cssnano));
     }
 
@@ -124,11 +124,11 @@ gulp.task('start', (done) => {
 gulp.task('copy-boilerplate', function(done) {
 
     let stream = gulp.src([path.join(__dirname.replace('bin', ''), 'boilerplate', '**', '*.*')], { dot: true })
-        .pipe(replace('<%- proxy %>', program.proxy))
-        .pipe(replace('<%- port %>', program.port.toString()))
-        .pipe(replace('<%- tech %>', program.tech))
+        .pipe(replace('<%- proxy %>', CLI.proxy))
+        .pipe(replace('<%- port %>', CLI.port.toString()))
+        .pipe(replace('<%- tech %>', CLI.tech))
         .pipe(gulpIf('app.styl', rename({
-            extname: `.${program.tech}`
+            extname: `.${CLI.tech}`
         })))
         .pipe(gulp.dest(process.cwd()));
 
