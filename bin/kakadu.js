@@ -34,11 +34,11 @@ let config = {};
 
 program
     .version(pkg.version)
-    .option('-a, --auth [user@password]', `set user@password for authorization`)
-    .option('--proxy [url]', 'URL for proxy')
-    .option('--port <n>', 'port for proxy', 7200)
-    .option('-t, --tech [tech]', 'tech for styles pre-processor (styl, scss, less)', /^(styl|scss|less)$/i, 'styl')
-    .option('-n, --nano', 'enable cssnano')
+    .option('-a, --auth [user@password]', `установка логина и пароля для авторизации`)
+    .option('--proxy [url]', 'URL для прокси')
+    .option('--port <n>', 'порт для прокси', 7200)
+    .option('-t, --tech [tech]', 'CSS пре-процессор styl, scss, less, по умолчанию styl', /^(styl|scss|less)$/i, 'styl')
+    .option('-n, --nano', 'включить cssnano')
     .parse(process.argv);
 
 
