@@ -36,8 +36,8 @@ CLI
     .version(pkg.version)
     .option('-a, --auth [user@password]', `установка логина и пароля для авторизации`)
     .option('--proxy [url]', 'URL для прокси')
-    .option('-t, --tech [tech]', 'CSS пре-процессор styl, scss, less, по умолчанию styl', /^(styl|scss|less)$/i, 'styl')
     .option('-p, --port <n>', 'порт для прокси', parseInt, 7200)
+    .option('-t, --tech [tech]', 'CSS пре-процессор styl, scss, less (по умолчанию styl)', /^(styl|scss|less)$/i, 'styl')
     .option('-n, --nano', 'включить cssnano')
     .parse(process.argv);
 
@@ -125,8 +125,8 @@ gulp.task('copy-boilerplate', function(done) {
 
     let stream = gulp.src([path.join(__dirname.replace('bin', ''), 'boilerplate', '**', '*.*')], { dot: true })
         .pipe(replace('<%- proxy %>', CLI.proxy))
-        .pipe(replace('<%- tech %>', CLI.tech))
         .pipe(replace('<%- port %>', CLI.port))
+        .pipe(replace('<%- tech %>', CLI.tech.toLowerCase()))
         .pipe(gulpIf('app.styl', rename({
             extname: `.${CLI.tech}`
         })))
