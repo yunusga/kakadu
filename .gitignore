@@ -6,3 +6,4 @@ node_modules
 *.diff
 *.patch
 test
+package-lock.json
