@@ -36,7 +36,7 @@ CLI
     .version(pkg.version)
     .option('-a, --auth [user@password]', `установка логина и пароля для авторизации`)
     .option('--proxy [url]', 'URL для прокси')
-    .option('-p, --port <n>', 'порт для прокси', parseInt, 7200)
+    .option('-p, --port <n>', 'порт для прокси', 8300)
     .option('-t, --tech [tech]', 'CSS пре-процессор styl, scss, less (по умолчанию styl)', /^(styl|scss|less)$/i, 'styl')
     .option('-n, --nano', 'включить cssnano')
     .parse(process.argv);
@@ -149,6 +149,10 @@ const init = () => {
         if (exist) {
 
             config = require(process.cwd() + '/config.js');
+
+            if (CLI.port) {
+                config.bs.port = CLI.port;
+            }
 
             gulp.start('start');
 
