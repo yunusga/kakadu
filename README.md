@@ -43,7 +43,6 @@ $ kakadu --help
 Устанавливает логин@пароль для включения авторизации для прокси (по умолчанию kakadu@случайный-пароль), в случае, если указать только имя пользователя, то, пароль сгенерируется автоматически.
 
 ![Авторизация с параметрами по умолчанию](https://1.downloader.disk.yandex.ru/disk/1ce5bf3021add193b99ca15a4673e93f34adaa3ca51b036b531437e4ae499c2f/5971d6ba/_B0aXmp4RJTYYcc2mgnKlhvOzGyFr0KHGWEEtj1g8US-Bl9MJ8jDnVYmreOu0sNin2A8FUuQRBqxdqUHdjNSyQ%3D%3D?uid=0&filename=2017-07-21_11-22-15.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&fsize=1802&hid=bbd59749690ab2a33589ab135e681db4&media_type=image&tknv=v2&etag=72f0d89eb995b785be0fcc1a49d32779)
-- `--nano` - включение cssnano при сборке стилей
 
 ### --proxy [url] -p, --port <n> -t, --tech [tech]
 Ипользуются вместе, в момент инициализации проекта, для установки значений в конфиге.
@@ -56,7 +55,7 @@ kakadu --proxy https://example.com -p 9000 -t styl
 URL проксируемого сайта проекта
 
 ### -p, --port <n>
-Установка порта для прокси. Имеет приоритет над установленным портом в конфиге.
+Установка порта для прокси. Имеет приоритет над установленным портом в конфиге (по умолчанию 8300).
 
 ### -t, --tech [tech]
 CSS пре-процессор styl, scss, less (по умолчанию styl) для стилей проекта
