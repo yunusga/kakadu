@@ -74,7 +74,7 @@ const stylePreProcessor = (tech) => {
         break;
 
         default:
-            console.log('Styles pre-processor error, no option in config');
+            console.log('Не выбран CSS пре-процессор, проверьте настройки проекта');
     }
 }
 
