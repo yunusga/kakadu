@@ -37,8 +37,8 @@ program
     .option('-a, --auth [user@password]', `set user@password for authorization`)
     .option('--proxy [url]', 'URL for proxy')
     .option('--port <n>', 'port for proxy', 7200)
-    .option('--tech [tech]', 'tech for styles pre-processor (styl, scss, less)', /^(styl|scss|less)$/i, 'styl')
-    .option('--nano', 'enable cssnano')
+    .option('-t, --tech [tech]', 'tech for styles pre-processor (styl, scss, less)', /^(styl|scss|less)$/i, 'styl')
+    .option('-n, --nano', 'enable cssnano')
     .parse(process.argv);
 
 
