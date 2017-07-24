@@ -34,7 +34,7 @@ let config = {};
 
 program
     .version(pkg.version)
-    .option('-a, --auth [user@password]', `set user@password for authorization`, pkg.name)
+    .option('-a, --auth [user@password]', `set user@password for authorization`)
     .option('--proxy [url]', 'URL for proxy')
     .option('--port <n>', 'port for proxy', 7200)
     .option('--tech [tech]', 'tech for styles pre-processor (styl, scss, less)', /^(styl|scss|less)$/i, 'styl')
