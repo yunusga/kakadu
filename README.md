@@ -15,8 +15,8 @@ git remote set-url origin https://github.com/tazau/kakadu.git
 - [Параметры CLI](#Параметры-cli)
 
 ## Установка
-* ```git clone https://github.com/yunusga/kakadu.git && cd kakadu && npm i . -g && npm link```
-- возможны ошибки при установке ```gulp-sass``` на Windows OS, скорее всего потребуется установить ```python 2```
+- `git clone https://github.com/tazau/kakadu.git && cd kakadu && npm i . -g && npm link`
+- возможны ошибки при установке `gulp-sass` на Windows OS, скорее всего потребуется установить `python 2`
 - Да, в случае отстутствия установленного в системе python, gulp-sass не устанавливается. Не забудьте во время установки отметить пункт установки переменной окружения или добавить позже, вручную
 
 ## Использование CLI
