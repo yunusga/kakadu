@@ -151,6 +151,10 @@ const init = () => {
                 config.bs.port = CLI.port;
             }
 
+            bs.use(require('bs-latency'), {
+                routes: config.bs.latencyRoutes || []
+            });
+
             gulp.start('start');
 
         } else {
