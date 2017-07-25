@@ -45,14 +45,11 @@ CLI
 /**
  * Проверка правильности установки логина и пароля для авторизации
  */
-if (CLI.auth) {
-
-    bs.use(require('bs-auth'), {
-        user: getAuthParams(CLI.auth)[0],
-        pass: getAuthParams(CLI.auth)[1]
-    });
-}
-
+bs.use(require('bs-auth'), {
+    user: getAuthParams(CLI.auth)[0],
+    pass: getAuthParams(CLI.auth)[1],
+    use: CLI.auth
+});
 
 
 const stylePreProcessor = (tech) => {
