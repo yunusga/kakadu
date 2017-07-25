@@ -1,5 +1,28 @@
 'use strict';
 
+const path = require('path');
+
+// folders names
+const folders = {
+    dist     : 'dist',
+    source   : 'source',
+    beml     : 'beml'
+};
+
+// BEML settings
+const beml = {
+    src: path.join(folders.source, folders.beml, '**', '*.beml'),
+    dest: path.join(folders.dist, folders.beml),
+    rename : {
+        extname: '.html'
+    },
+    opts : {
+        elemPrefix: '__',
+        modPrefix : '--',
+        modDlmtr  : '-'
+    }
+};
+
 const kakadu = {
     tech : '<%- tech %>',
     autoprefixer : {
@@ -71,5 +94,6 @@ const browserSync = {
 
 module.exports = {
     kakadu : kakadu,
-    bs     : browserSync
+    bs     : browserSync,
+    beml   : beml
 }

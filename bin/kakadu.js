@@ -10,6 +10,10 @@ const plumber         = require('gulp-plumber');
 const replace         = require('gulp-replace');
 const rename          = require('gulp-rename');
 const gulpIf          = require('gulp-if');
+const watch           = require('gulp-watch');
+const beml            = require('gulp-beml');
+const batch           = require('gulp-batch');
+const changed         = require('gulp-changed');
 const stylus          = require('gulp-stylus');
 const less            = require('gulp-less');
 const scss            = require('gulp-sass');
@@ -49,6 +53,29 @@ bs.use(require('bs-auth'), {
     user: getAuthParams(CLI.auth)[0],
     pass: getAuthParams(CLI.auth)[1],
     use: CLI.auth
+});
+
+gulp.task('beml', (done) => {
+
+    let stream = gulp.src(config.beml.src)
+        .pipe(plumber())
+        .pipe(changed(config.beml.src))
+        .pipe(beml(config.beml.opts))
+        .pipe(rename(config.beml.rename))
+        .pipe(gulp.dest(config.beml.dest));
+
+    stream.on('end', function () {
+
+        bs.reload();
+
+        console.log(`[ ${chalk.green('BEML')} ] task complete`);
+
+        done();
+    });
+
+    stream.on('error', function (err) {
+        done(err);
+    });
 });
 
 
@@ -110,11 +137,18 @@ gulp.task('proxy-start', (done) => {
 
     gulp.watch('./**/*.{styl,scss,less}', ['styles']);
 
+    /**
+     * BEML task
+     */
+    watch(config.paths.beml.src, batch((events, done) => {
+        gulp.start('beml', done);
+    }));
+
 });
 
 
 gulp.task('start', (done) => {
-    runSequence('proxy-start', 'styles', done);
+    runSequence('proxy-start', 'styles', 'beml', done);
 });
 
 

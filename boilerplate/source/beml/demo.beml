@@ -1,0 +1,18 @@
+<div block="b-animals">
+    <div elem="cat" mod="size:big, color:red"></div>
+</div>
+
+<div block="animals">
+    <div block="unicorn" mod="size:large, female"></div>
+</div>
+
+<div block="animals">
+    <div elem="item" mix="block:unicorn, mod: [large, female]">
+        <div block="unicorn" elem="photo"></div>
+        <div elem="item-name"></div>
+    </div>
+</div>
+
+<div block="unicorn" mix="block:animals, elem:item, mod:{size:large,gender:female}"></div>
+
+<div block="unicorn" mix="{block:b-mix-1}, {block:b-mix-2, mod:[mod1, mod2]}"></div>
