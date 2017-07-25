@@ -16,6 +16,7 @@
     "autoprefixer": "^7.1.2",
     "browser-sync": "^2.18.13",
     "bs-auth": "^1.1.4",
+    "bs-latency": "^1.0.0",
     "chalk": "^2.0.1",
     "commander": "^2.11.0",
     "cssnano": "^3.10.0",
