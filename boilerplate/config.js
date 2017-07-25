@@ -6,7 +6,8 @@ const path = require('path');
 const folders = {
     dist     : 'dist',
     source   : 'source',
-    beml     : 'beml'
+    beml     : 'beml',
+    iconizer : 'iconizer'
 };
 
 // BEML settings
@@ -20,6 +21,23 @@ const beml = {
         elemPrefix: '__',
         modPrefix : '--',
         modDlmtr  : '-'
+    }
+};
+
+const iconizer = {
+    src: path.join(folders.source, folders.iconizer, 'icons','*.svg'),
+    opts: {
+        mode: {
+            symbol: { // symbol mode to build the SVG
+                dest   : path.join(folders.source, folders.iconizer), // destination folder
+                sprite : 'sprite.svg', //sprite name
+                example: false // Build sample page
+            }
+        },
+        svg : {
+            xmlDeclaration    : false, // strip out the XML attribute
+            doctypeDeclaration: false // don't include the !DOCTYPE declaration
+        }
     }
 };
 
@@ -76,6 +94,13 @@ const browserSync = {
         }
     },
     rewriteRules: [
+        {
+            match : /<body[\s\S]*?>/g,
+            fn: (req, res, match) => {
+
+                return match;
+            }
+        },
         {
             match: /What/g,
             fn: function (req, res, match) {
