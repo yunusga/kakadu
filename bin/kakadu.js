@@ -59,7 +59,7 @@ gulp.task('beml', (done) => {
 
     let stream = gulp.src(config.beml.src)
         .pipe(plumber())
-        .pipe(changed(config.beml.src))
+        .pipe(changed(config.beml.dest))
         .pipe(beml(config.beml.opts))
         .pipe(rename(config.beml.rename))
         .pipe(gulp.dest(config.beml.dest));
