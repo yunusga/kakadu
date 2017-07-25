@@ -140,7 +140,7 @@ gulp.task('proxy-start', (done) => {
     /**
      * BEML task
      */
-    watch(config.paths.beml.src, batch((events, done) => {
+    watch(config.beml.src, batch((events, done) => {
         gulp.start('beml', done);
     }));
 
