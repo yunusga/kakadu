@@ -59,6 +59,13 @@ const browserSync = {
                 return 'For';
             }
         }
+    ],
+    latencyRoutes: [
+        // {
+        //     route: '/app.css',
+        //     latency: 5000,
+        //     active: true
+        // }
     ]
 }
 
