@@ -4,6 +4,7 @@
 
 const path            = require('path');
 const fs              = require('fs-extra');
+const boxen           = require('boxen');
 const gulp            = require('gulp');
 const util            = require('gulp-util');
 const plumber         = require('gulp-plumber');
@@ -193,6 +194,14 @@ gulp.task('copy-boilerplate', function(done) {
         .pipe(gulp.dest(process.cwd()));
 
     stream.on('end', function () {
+
+        console.log(boxen(`${pkg.name.toUpperCase()} v${pkg.version}\nBoilerplate successfully copied`, {
+                padding: 1,
+                margin: 1,
+                borderStyle: 'double',
+                borderColor: 'yellow'
+            }));
+
         done();
     });
 
