@@ -12,6 +12,8 @@ const rename          = require('gulp-rename');
 const gulpIf          = require('gulp-if');
 const watch           = require('gulp-watch');
 const beml            = require('gulp-beml');
+const iconizer        = require('../modules/gulp-iconizer');
+const svgSprite       = require('gulp-svg-sprite');
 const batch           = require('gulp-batch');
 const changed         = require('gulp-changed');
 const stylus          = require('gulp-stylus');
@@ -57,12 +59,13 @@ bs.use(require('bs-auth'), {
 
 gulp.task('beml', (done) => {
 
-    let stream = gulp.src(config.beml.src)
+    let stream = gulp.src(config.components.src)
         .pipe(plumber())
-        .pipe(changed(config.beml.dest))
-        .pipe(beml(config.beml.opts))
-        .pipe(rename(config.beml.rename))
-        .pipe(gulp.dest(config.beml.dest));
+        .pipe(changed(config.components.dest))
+        .pipe(iconizer({ path : config.iconizer.spritePath}))
+        .pipe(beml(config.components.opts))
+        .pipe(rename(config.components.rename))
+        .pipe(gulp.dest(config.components.dest));
 
     stream.on('end', function () {
 
@@ -131,6 +134,25 @@ gulp.task('styles', () => {
 });
 
 
+/**
+ * генерация svg спрайта
+ */
+gulp.task('iconizer', (done) => {
+
+    let stream = gulp.src(config.iconizer.src)
+        .pipe(svgSprite(config.iconizer.opts))
+        .pipe(gulp.dest('.'));
+
+    stream.on('end', function() {
+        done();
+    });
+
+    stream.on('error', function(err) {
+        done(err);
+    });
+});
+
+
 gulp.task('proxy-start', (done) => {
 
     bs.init(config.bs, done);
@@ -140,15 +162,20 @@ gulp.task('proxy-start', (done) => {
     /**
      * BEML task
      */
-    watch(config.beml.src, batch((events, done) => {
+    watch(config.components.src, batch((events, done) => {
         gulp.start('beml', done);
+    }));
+
+    /* ICONIZER */
+    watch(path.join(config.iconizer.src), batch(function (events, done) {
+        runSequence('iconizer', 'beml', done);
     }));
 
 });
 
 
 gulp.task('start', (done) => {
-    runSequence('proxy-start', 'styles', 'beml', done);
+    runSequence('proxy-start', 'styles', 'beml', 'iconizer', done);
 });
 
 

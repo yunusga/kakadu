@@ -4,15 +4,16 @@ const path = require('path');
 
 // folders names
 const folders = {
-    dist     : 'dist',
-    source   : 'source',
-    beml     : 'beml'
+    dist       : 'dist',
+    source     : 'source',
+    components : 'components',
+    iconizer   : 'iconizer'
 };
 
-// BEML settings
-const beml = {
-    src: path.join(folders.source, folders.beml, '**', '*.beml'),
-    dest: path.join(folders.dist, folders.beml),
+// COMPONENTS
+const components = {
+    src: path.join(folders.source, folders.components, '**', '*.beml'),
+    dest: path.join(folders.dist, folders.components),
     rename : {
         extname: '.html'
     },
@@ -20,6 +21,24 @@ const beml = {
         elemPrefix: '__',
         modPrefix : '--',
         modDlmtr  : '-'
+    }
+};
+
+const iconizer = {
+    src: path.join(folders.source, folders.iconizer, 'icons', '**', '*.svg'),
+    spritePath: path.join(folders.source, folders.iconizer, 'sprite.svg'),
+    opts: {
+        mode: {
+            symbol: { // symbol mode to build the SVG
+                dest   : path.join(folders.source, folders.iconizer), // destination folder
+                sprite : 'sprite.svg', //sprite name
+                example: false // Build sample page
+            }
+        },
+        svg : {
+            xmlDeclaration    : false, // strip out the XML attribute
+            doctypeDeclaration: false // don't include the !DOCTYPE declaration
+        }
     }
 };
 
@@ -77,6 +96,13 @@ const browserSync = {
     },
     rewriteRules: [
         {
+            match : /<body[\s\S]*?>/g,
+            fn: (req, res, match) => {
+
+                return match;
+            }
+        },
+        {
             match: /What/g,
             fn: function (req, res, match) {
                 return 'For';
@@ -93,7 +119,8 @@ const browserSync = {
 }
 
 module.exports = {
-    kakadu : kakadu,
-    bs     : browserSync,
-    beml   : beml
+    kakadu     : kakadu,
+    bs         : browserSync,
+    components : components,
+    iconizer   : iconizer
 }
