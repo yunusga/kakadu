@@ -5,6 +5,7 @@
 const path            = require('path');
 const fs              = require('fs-extra');
 const boxen           = require('boxen');
+const clipboardy      = require('clipboardy');
 const gulp            = require('gulp');
 const util            = require('gulp-util');
 const plumber         = require('gulp-plumber');
@@ -156,7 +157,21 @@ gulp.task('iconizer', (done) => {
 
 gulp.task('proxy-start', (done) => {
 
-    bs.init(config.bs, done);
+    bs.init(config.bs, () => {
+
+        let urls = bs.getOption('urls');
+
+        console.log(boxen(`${chalk.bold.yellow(pkg.name.toUpperCase())} v${pkg.version} is Started!\n\n${chalk.bold.green(urls.get('local'))} сopied to clipboard!`, {
+            padding: 1,
+            margin: 1,
+            borderStyle: 'double',
+            borderColor: 'green'
+        }));
+
+        clipboardy.writeSync(urls.get('local'));
+
+        done();
+    });
 
     watch(config.css.watch, batch((events, done) => {
         gulp.start('styles', done);
