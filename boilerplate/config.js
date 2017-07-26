@@ -4,16 +4,16 @@ const path = require('path');
 
 // folders names
 const folders = {
-    dist     : 'dist',
-    source   : 'source',
-    beml     : 'beml',
-    iconizer : 'iconizer'
+    dist       : 'dist',
+    source     : 'source',
+    components : 'components',
+    iconizer   : 'iconizer'
 };
 
-// BEML settings
-const beml = {
-    src: path.join(folders.source, folders.beml, '**', '*.beml'),
-    dest: path.join(folders.dist, folders.beml),
+// COMPONENTS
+const components = {
+    src: path.join(folders.source, folders.components, '**', '*.beml'),
+    dest: path.join(folders.dist, folders.components),
     rename : {
         extname: '.html'
     },
@@ -25,7 +25,8 @@ const beml = {
 };
 
 const iconizer = {
-    src: path.join(folders.source, folders.iconizer, 'icons','*.svg'),
+    src: path.join(folders.source, folders.iconizer, 'icons', '**', '*.svg'),
+    spritePath: path.join(folders.source, folders.iconizer, 'sprite.svg'),
     opts: {
         mode: {
             symbol: { // symbol mode to build the SVG
@@ -118,7 +119,8 @@ const browserSync = {
 }
 
 module.exports = {
-    kakadu : kakadu,
-    bs     : browserSync,
-    beml   : beml
+    kakadu     : kakadu,
+    bs         : browserSync,
+    components : components,
+    iconizer   : iconizer
 }
