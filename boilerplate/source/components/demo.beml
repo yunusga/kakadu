@@ -16,3 +16,7 @@
 <div block="unicorn" mix="block:animals, elem:item, mod:{size:large,gender:female}"></div>
 
 <div block="unicorn" mix="{block:b-mix-1}, {block:b-mix-2, mod:[mod1, mod2]}"></div>
+
+<icon name="transform" tag="span">
+
+<?php echo 'kakadu <icon name="transform" tag="span">'; ?>
