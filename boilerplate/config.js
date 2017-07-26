@@ -6,8 +6,20 @@ const path = require('path');
 const folders = {
     dist       : 'dist',
     source     : 'source',
+    styles     : 'styles',
     components : 'components',
     iconizer   : 'iconizer'
+};
+
+// CSS
+const css = {
+    tech : '<%- tech %>',
+    watch: path.join('.', '**', '*.{styl,scss,less}'),
+    src  : [
+        path.join('.', '*.{styl,scss,less}'),
+        path.join(folders.source, folders.styles, '*.{styl,scss,less}'),
+    ],
+    dest : './'
 };
 
 // COMPONENTS
@@ -43,7 +55,6 @@ const iconizer = {
 };
 
 const kakadu = {
-    tech : '<%- tech %>',
     autoprefixer : {
         browsers : [
             'last 2 version',
@@ -121,6 +132,7 @@ const browserSync = {
 module.exports = {
     kakadu     : kakadu,
     bs         : browserSync,
+    css        : css,
     components : components,
     iconizer   : iconizer
 }
