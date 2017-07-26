@@ -47,6 +47,7 @@ CLI
     .option('-p, --port <n>', 'порт для прокси', 8300)
     .option('-t, --tech [tech]', 'CSS пре-процессор styl, scss, less (по умолчанию styl)', /^(styl|scss|less)$/i, 'styl')
     .option('-n, --nano', 'включить cssnano')
+    .option('-o, --open', 'открывать браузер при старте')
     .parse(process.argv);
 
 
@@ -236,6 +237,10 @@ const init = () => {
             if (CLI.port) {
                 config.bs.port = CLI.port;
             }
+
+            Object.assign(config.bs, {
+                open : CLI.open
+            });
 
             bs.use(require('bs-latency'), {
                 routes: config.bs.latencyRoutes || []
