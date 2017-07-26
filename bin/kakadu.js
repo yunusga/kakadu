@@ -157,7 +157,9 @@ gulp.task('proxy-start', (done) => {
 
     bs.init(config.bs, done);
 
-    gulp.watch('./**/*.{styl,scss,less}', ['styles']);
+    watch('./**/*.{styl,scss,less}', batch((events, done) => {
+        gulp.start('styles', done);
+    }));
 
     /**
      * BEML task
