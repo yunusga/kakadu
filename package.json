@@ -43,6 +43,7 @@
     "postcss-focus": "^2.0.0",
     "postcss-inline-svg": "^3.0.0",
     "postcss-svgo": "^2.1.6",
-    "run-sequence": "^2.1.0"
+    "run-sequence": "^2.1.0",
+    "through2": "^2.0.3"
   }
 }
