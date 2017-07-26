@@ -28,6 +28,10 @@ const discardComments = require('postcss-discard-comments');
 const inlineSvg       = require('postcss-inline-svg');
 const svgo            = require('postcss-svgo');
 const groupCssMQ      = require('gulp-group-css-media-queries');
+const babel           = require('gulp-babel');
+const uglify          = require('gulp-uglify');
+const jscs            = require('gulp-jscs');
+const include         = require('gulp-include');
 const cssnano         = require('cssnano');
 const autoprefixer    = require('autoprefixer');
 const runSequence     = require('run-sequence');
@@ -137,6 +141,35 @@ gulp.task('styles', () => {
 });
 
 
+gulp.task('scripts', (done) => {
+
+    let stream = gulp.src(config.scripts.src)
+        .pipe(plumber())
+        .pipe(include({
+            extensions: 'js',
+            hardFail: false
+        })).on('error', util.log)
+        .pipe(babel({
+            presets: ['babel-preset-es2015'].map(require.resolve),
+            plugins: ['babel-plugin-transform-object-assign'].map(require.resolve),
+            babelrc: false
+        }))
+        .pipe(gulp.dest(config.scripts.dest))
+
+    stream.on('end', function() {
+
+        console.log(`[  ${chalk.green('JS')}  ] task complete`);
+
+        done();
+    });
+
+    stream.on('error', function(err) {
+        done(err);
+    });
+
+});
+
+
 /**
  * генерация svg спрайта
  */
@@ -174,12 +207,18 @@ gulp.task('proxy-start', (done) => {
         done();
     });
 
+    /* SCRIPTS */
+    watch(path.join(config.scripts.watch), batch(function (events, done) {
+        runSequence('scripts', done);
+    }));
+
+    /* CSS */
     watch(config.css.watch, batch((events, done) => {
         gulp.start('styles', done);
     }));
 
     /**
-     * BEML task
+     * BEML
      */
     watch(config.components.src, batch((events, done) => {
         gulp.start('beml', done);
@@ -194,7 +233,7 @@ gulp.task('proxy-start', (done) => {
 
 
 gulp.task('start', (done) => {
-    runSequence('proxy-start', 'styles', 'iconizer', 'beml', done);
+    runSequence('proxy-start', 'styles', 'scripts', 'iconizer', 'beml', done);
 });
 
 gulp.task('copy-boilerplate', function(done) {

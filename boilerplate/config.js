@@ -7,6 +7,7 @@ const folders = {
     dist       : 'dist',
     source     : 'source',
     styles     : 'styles',
+    scripts    : 'scripts',
     components : 'components',
     iconizer   : 'iconizer'
 };
@@ -19,6 +20,14 @@ const css = {
         path.join('.', '*.{styl,scss,less}'),
         path.join(folders.source, folders.styles, '*.{styl,scss,less}'),
     ],
+    dest : './'
+};
+
+// SCRIPTS
+const scripts = {
+    es6 : true,
+    watch: path.join(folders.source, '**', '*.js'),
+    src  : path.join(folders.source, folders.scripts, '**', '*.js'),
     dest : './'
 };
 
@@ -133,6 +142,7 @@ module.exports = {
     kakadu     : kakadu,
     bs         : browserSync,
     css        : css,
+    scripts    : scripts,
     components : components,
     iconizer   : iconizer
 }
