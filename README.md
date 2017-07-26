@@ -3,16 +3,15 @@
 Модуль для локальных-тестовых изменений удалённого сайта (отладка скриптов, адаптация и т.п.)
 
 ## ВНИМАНИЕ!
-kakadu переехал в организацию [tazau](https://github.com/tazau)
-необходимо изменить ссылки на репозиторий
+> `kakadu` переехал в организацию [tazau](https://github.com/tazau) необходимо изменить ссылки на репозиторий
 ```
 git remote set-url origin https://github.com/tazau/kakadu.git
 ```
 
-### Содержание
+## Содержание
 - [Установка](#Установка)
-- [Начало работы](#Начало-работы)
-- [Параметры CLI](#Параметры-cli)
+- [Использование CLI](#Использование-cli)
+- [Заготовка проекта](#Заготовка-проекта)
 
 ## Установка
 - `git clone https://github.com/tazau/kakadu.git && cd kakadu && npm i . -g && npm link`
@@ -64,3 +63,25 @@ CSS пре-процессор styl, scss, less (по умолчанию styl) д
 
 ### -o, --open
 Открывает браузер при старте модуля,приоритет над опцией `open` для натстроек `browsersync`
+
+## Заготовка проекта
+
+```bash
+kakadu_project
+├─ source
+│   └─ components
+|   |   ├─ template.{html,beml,php,etc}
+|   |   ├─ template.{styl,less,scss}
+|   |   └─ template.js
+│   ├─ iconizer
+│   │   ├─ icons
+│   │   │   ├─ close.svg
+│   │   │   └─ menu.svg
+│   │   └─ sprite.svg
+│   ├─ scripts
+|   |   └─ app.js
+│   └─ styles
+|       └─ app.{styl,less,scss}
+│
+└─ config.js
+```
