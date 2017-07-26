@@ -35,6 +35,7 @@ $ kakadu --help
     -p, --port <n>              порт для прокси
     -t, --tech [tech]           CSS пре-процессор styl, scss, less (по умолчанию styl)
     -n, --nano                  включить cssnano
+    -o, --open                  открывать браузер при старте
     -h, --help                  справка по использованию
 
 ```
