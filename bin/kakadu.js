@@ -175,7 +175,7 @@ gulp.task('proxy-start', (done) => {
 
 
 gulp.task('start', (done) => {
-    runSequence('proxy-start', 'styles', 'beml', 'iconizer', done);
+    runSequence('proxy-start', 'styles', 'iconizer', 'beml', done);
 });
 
 
