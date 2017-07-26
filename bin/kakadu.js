@@ -125,12 +125,12 @@ gulp.task('styles', () => {
         plugins.push(cssnano(config.kakadu.cssnano));
     }
 
-    gulp.src('./*.{styl,scss,less}')
+    gulp.src(config.css.src)
         .pipe(plumber())
-        .pipe(stylePreProcessor(config.kakadu.tech))
+        .pipe(stylePreProcessor(config.css.tech))
         .pipe(groupCssMQ())
         .pipe(postcss(plugins))
-        .pipe(gulp.dest('.'))
+        .pipe(gulp.dest(config.css.dest))
         .pipe(bs.stream());
 });
 
@@ -158,7 +158,7 @@ gulp.task('proxy-start', (done) => {
 
     bs.init(config.bs, done);
 
-    watch('./**/*.{styl,scss,less}', batch((events, done) => {
+    watch(config.css.watch, batch((events, done) => {
         gulp.start('styles', done);
     }));
 
@@ -181,14 +181,13 @@ gulp.task('start', (done) => {
     runSequence('proxy-start', 'styles', 'iconizer', 'beml', done);
 });
 
-
 gulp.task('copy-boilerplate', function(done) {
 
     let stream = gulp.src([path.join(__dirname.replace('bin', ''), 'boilerplate', '**', '*.*')], { dot: true })
         .pipe(replace('<%- proxy %>', CLI.proxy))
         .pipe(replace('<%- port %>', CLI.port))
         .pipe(replace('<%- tech %>', CLI.tech.toLowerCase()))
-        .pipe(gulpIf('app.styl', rename({
+        .pipe(gulpIf('*.csstech', rename({
             extname: `.${CLI.tech}`
         })))
         .pipe(gulp.dest(process.cwd()));
