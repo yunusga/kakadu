@@ -80,7 +80,7 @@ const browserSync = {
     proxy          : '<%- proxy %>',
     port           : <%- port %>,
     notify         : true,
-    open           : true,
+    open           : false,
     logLevel       : 'info',
     logPrefix      : 'KAKADU',
     logFileChanges : true,
