@@ -116,7 +116,6 @@ const stylePreProcessor = (tech) => {
 gulp.task('styles', () => {
 
     let plugins = [
-        discardComments(),
         focus(),
         inlineSvg(),
         svgo(),
@@ -128,6 +127,7 @@ gulp.task('styles', () => {
      * Включение cssnano для оптимизации стилей проекта
      */
     if (CLI.nano) {
+        plugins.push(discardComments());
         plugins.push(cssnano(config.kakadu.cssnano));
     }
 
