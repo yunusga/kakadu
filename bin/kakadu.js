@@ -48,7 +48,7 @@ CLI
     .version(pkg.version)
     .option('-a, --auth [user@password]', `установка логина и пароля для авторизации`)
     .option('--proxy [url]', 'URL для прокси')
-    .option('-p, --port <n>', 'порт для прокси', 8300)
+    .option('-p, --port <n>', 'порт для прокси')
     .option('-t, --tech [tech]', 'CSS пре-процессор styl, scss, less (по умолчанию styl)', /^(styl|scss|less)$/i, 'styl')
     .option('-n, --nano', 'включить cssnano')
     .option('-o, --open', 'открывать браузер при старте')
@@ -240,7 +240,7 @@ gulp.task('copy-boilerplate', function(done) {
 
     let stream = gulp.src([path.join(__dirname.replace('bin', ''), 'boilerplate', '**', '*.*')], { dot: true })
         .pipe(replace('<%- proxy %>', CLI.proxy))
-        .pipe(replace('<%- port %>', CLI.port))
+        .pipe(replace('<%- port %>', CLI.port || 8300))
         .pipe(replace('<%- tech %>', CLI.tech.toLowerCase()))
         .pipe(gulpIf('*.csstech', rename({
             extname: `.${CLI.tech}`
