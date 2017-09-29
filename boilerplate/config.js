@@ -116,6 +116,24 @@ const browserSync = {
     },
     rewriteRules: [
         {
+            match: /<\/head>/g,
+            fn: function (req, res, match) {
+                var metaSet ='\
+                            <meta name="format-detection" content="telephone=no">\n\
+                            <meta name="theme-color" content="#fff">\n\
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">\n\
+                            <!-- Disable link highlighting on IE 10 on Windows Phone (https://blogs.windows.com/buildingapps/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10/) -->\n\
+                            <meta name="msapplication-tap-highlight" content="no">\n\
+                            <!-- Add to homescreen -->\n\
+                            <meta name="mobile-web-app-capable" content="yes">\n\
+                            <meta name="apple-mobile-web-app-capable" content="yes">\n\
+                            <meta name="MobileOptimized" content="320">\n\
+                            <meta name="HandheldFriendly" content="True">\n\
+                ';
+                return metaSet + match;
+            }
+        },
+        {
             match : /<body[\s\S]*?>/g,
             fn: (req, res, match) => {
 
