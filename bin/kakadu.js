@@ -277,7 +277,7 @@ gulp.task('copy-boilerplate', function(done) {
 
     stream.on('end', function () {
 
-        console.log(boxen(`${pkg.name.toUpperCase()} v${pkg.version}\nBoilerplate successfully copied`, {
+        console.log(boxen(`${chalk.bold.yellow(pkg.name.toUpperCase())}} v${pkg.version}\nBoilerplate successfully copied`, {
                 padding: 1,
                 margin: 1,
                 borderStyle: 'double',
