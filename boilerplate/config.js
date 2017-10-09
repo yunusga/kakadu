@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const fs   = require('fs');
 
 // folders names
 const folders = {
@@ -117,9 +118,14 @@ const browserSync = {
     rewriteRules: [
         {
             match : /<body[\s\S]*?>/g,
-            fn: (req, res, match) => {
+            fn : (req, res, match) => {
 
-                return match;
+                let sprite = fs
+                    .readFileSync(iconizer.spritePath)
+                    .toString()
+                    .replace(/(['"])[\s\S]*?\1/, (match) => `${match} class="app-svg-sprite"`);
+
+                return match + sprite;
             }
         },
         {
