@@ -85,19 +85,29 @@ const kakadu = {
 };
 
 const browserSync = {
-    serveStatic    : ['./'],
-    files          : ['./**/*.js', './**/*.css'],
-    proxy          : '<%- proxy %>',
-    port           : <%- port %>,
-    notify         : true,
-    open           : false,
-    logLevel       : 'info',
-    logPrefix      : 'KAKADU',
-    logFileChanges : true,
+    serveStatic  : ['./'],
+    watchOptions : {
+        ignoreInitial : true,
+        ignored       : '*.txt'
+    },
+    proxy        : '<%- proxy %>',
+    port         : '<%- port %>',
+    notify       : true,
+    open         : false,
+    logLevel     : 'info',
+    logPrefix    : 'KAKADU',
+    // Here you can disable/enable each feature individually
+    // ghostMode : {
+    //     clicks : true,
+    //     forms  : true,
+    //     scroll : false
+    // },
+    // Or switch them all off in one go
+    ghostMode    : false,
     snippetOptions : {
-        rule: {
-            match: /<\/head>/i,
-            fn: (snippet, match) => {
+        rule : {
+            match : /<\/head>/i,
+            fn : (snippet, match) => {
 
                 // let scriptSnippet = '' +
                 //     '<script id="___kakadu___" type="text/javascript">' +
@@ -115,7 +125,7 @@ const browserSync = {
             }
         }
     },
-    rewriteRules: [
+    rewriteRules : [
         {
             match : /<body[\s\S]*?>/g,
             fn : (req, res, match) => {
@@ -129,17 +139,17 @@ const browserSync = {
             }
         },
         {
-            match: /What/g,
-            fn: function (req, res, match) {
+            match : /What/g,
+            fn : function (req, res, match) {
                 return 'For';
             }
         }
     ],
     latencyRoutes: [
         // {
-        //     route: '/app.css',
-        //     latency: 5000,
-        //     active: true
+        //     route   : '/app.css',
+        //     latency : 5000,
+        //     active  : true
         // }
     ]
 }
