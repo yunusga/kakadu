@@ -221,6 +221,10 @@ gulp.task('proxy-start', (done) => {
         done();
     });
 
+});
+
+gulp.task('watch', (done) => {
+
     /* SCRIPTS */
     watch(path.join(config.scripts.watch), batch(function (events, done) {
         runSequence('scripts', done);
@@ -243,11 +247,18 @@ gulp.task('proxy-start', (done) => {
         runSequence('iconizer', 'beml', done);
     }));
 
+    /* GLOBAL WATCH */
+    watch(config.globalWatch, batch(function (events, done) {
+
+        bs.reload();
+        done();
+    }));
+
+    done();
 });
 
-
 gulp.task('start', (done) => {
-    runSequence('proxy-start', 'styles', 'scripts', 'iconizer', 'beml', done);
+    runSequence('proxy-start', 'styles', 'scripts', 'iconizer', 'beml', 'watch', done);
 });
 
 gulp.task('copy-boilerplate', function(done) {

@@ -13,6 +13,9 @@ const folders = {
     iconizer   : 'iconizer'
 };
 
+// global watch
+const globalWatch = path.join('*.{js,json,html}');
+
 // CSS
 const css = {
     tech : '<%- tech %>',
@@ -155,10 +158,11 @@ const browserSync = {
 }
 
 module.exports = {
-    kakadu     : kakadu,
-    bs         : browserSync,
-    css        : css,
-    scripts    : scripts,
-    components : components,
-    iconizer   : iconizer
+    kakadu      : kakadu,
+    bs          : browserSync,
+    globalWatch : globalWatch,
+    css         : css,
+    scripts     : scripts,
+    components  : components,
+    iconizer    : iconizer
 }
