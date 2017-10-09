@@ -51,6 +51,7 @@ CLI
     .option('-p, --port <n>', 'порт для прокси')
     .option('-t, --tech [tech]', 'CSS пре-процессор styl, scss, less (по умолчанию styl)', /^(styl|scss|less)$/i, 'styl')
     .option('-n, --nano', 'включить cssnano')
+    .option('-c, --clipboard', `кпировать URL в буфер обмена`)
     .option('-o, --open', 'открывать браузер при старте')
     .parse(process.argv);
 
@@ -201,14 +202,21 @@ gulp.task('proxy-start', (done) => {
             authString = `\n\nuser: ${bsAuth.user}\npass: ${bsAuth.pass}`;
         }
 
-        console.log(boxen(`${chalk.bold.yellow(pkg.name.toUpperCase())} v${pkg.version} is Started!\n\n${chalk.bold.green(urls.get('local'))} сopied to clipboard!${authString}`, {
+        let clipboardMsg = '';
+
+        if (CLI.clipboard) {
+
+            clipboardMsg = `\n\n${chalk.bold.green(urls.get('local'))} сopied to clipboard!${authString}`;
+            
+            clipboardy.writeSync(urls.get('local'));
+        }
+
+        console.log(boxen(`${chalk.bold.yellow(pkg.name.toUpperCase())} v${pkg.version} is Started!${clipboardMsg}`, {
             padding: 1,
             margin: 1,
             borderStyle: 'double',
             borderColor: 'green'
         }));
-
-        clipboardy.writeSync(urls.get('local'));
 
         done();
     });
