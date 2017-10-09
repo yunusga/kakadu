@@ -181,6 +181,9 @@ gulp.task('iconizer', (done) => {
         .pipe(gulp.dest('.'));
 
     stream.on('end', function() {
+
+        bs.reload();
+
         done();
     });
 
