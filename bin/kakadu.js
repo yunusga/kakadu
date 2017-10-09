@@ -51,7 +51,7 @@ CLI
     .option('-p, --port <n>', 'порт для прокси')
     .option('-t, --tech [tech]', 'CSS пре-процессор styl, scss, less (по умолчанию styl)', /^(styl|scss|less)$/i, 'styl')
     .option('-n, --nano', 'включить cssnano')
-    .option('-c, --clipboard', `кпировать URL в буфер обмена`)
+    .option('-c, --clipboard', `копировать URL прокси-сервера в буфер обмена`)
     .option('-o, --open', 'открывать браузер при старте')
     .parse(process.argv);
 
