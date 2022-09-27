@@ -11,7 +11,6 @@ const util            = require('gulp-util');
 const plumber         = require('gulp-plumber');
 const replace         = require('gulp-replace');
 const rename          = require('gulp-rename');
-const gulpIf          = require('gulp-if');
 const watch           = require('gulp-watch');
 const beml            = require('gulp-beml');
 const iconizer        = require('../modules/gulp-iconizer');
@@ -19,8 +18,6 @@ const svgSprite       = require('gulp-svg-sprite');
 const batch           = require('gulp-batch');
 const changed         = require('gulp-changed');
 const stylus          = require('gulp-stylus');
-const less            = require('gulp-less');
-const scss            = require('gulp-sass');
 const postcss         = require('gulp-postcss');
 const flexBugsFixes   = require('postcss-flexbugs-fixes');
 const focus           = require('postcss-focus');
@@ -29,8 +26,6 @@ const inlineSvg       = require('postcss-inline-svg');
 const svgo            = require('postcss-svgo');
 const groupCssMQ      = require('gulp-group-css-media-queries');
 const babel           = require('gulp-babel');
-const uglify          = require('gulp-uglify');
-const jscs            = require('gulp-jscs');
 const include         = require('gulp-include');
 const cssnano         = require('cssnano');
 const autoprefixer    = require('autoprefixer');
@@ -49,7 +44,6 @@ CLI
     .option('-a, --auth [user@password]', `установка логина и пароля для авторизации`)
     .option('--proxy [url]', 'URL для прокси')
     .option('-p, --port <n>', 'порт для прокси')
-    .option('-t, --tech [tech]', 'CSS пре-процессор styl, scss, less (по умолчанию styl)', /^(styl|scss|less)$/i, 'styl')
     .option('-n, --nano', 'включить cssnano')
     .option('-c, --clipboard', `копировать URL прокси-сервера в буфер обмена`)
     .option('-o, --open', 'открывать браузер при старте')
@@ -70,7 +64,6 @@ gulp.task('beml', (done) => {
     let stream = gulp.src(config.components.src)
         .pipe(plumber())
         .pipe(changed(config.components.dest))
-        .pipe(iconizer({ path : config.iconizer.spritePath}))
         .pipe(beml(config.components.opts))
         .pipe(rename(config.components.rename))
         .pipe(gulp.dest(config.components.dest));
@@ -91,26 +84,9 @@ gulp.task('beml', (done) => {
 
 
 const stylePreProcessor = (tech) => {
-
-    switch (tech) {
-
-        case 'styl':
-            return stylus({
-                'include css': true
-            });
-        break;
-
-        case 'scss':
-            return scss();
-        break;
-
-        case 'less':
-            return less();
-        break;
-
-        default:
-            console.log('Не выбран CSS пре-процессор, проверьте настройки проекта');
-    }
+    return stylus({
+        'include css': true
+    });
 }
 
 
@@ -210,7 +186,7 @@ gulp.task('proxy-start', (done) => {
         if (CLI.clipboard) {
 
             clipboardMsg = `\n\n${chalk.bold.green(urls.get('local'))} сopied to clipboard!${authString}`;
-            
+
             clipboardy.writeSync(urls.get('local'));
         }
 
@@ -265,19 +241,14 @@ gulp.task('start', (done) => {
 });
 
 gulp.task('copy-boilerplate', function(done) {
-
     let stream = gulp.src([path.join(__dirname.replace('bin', ''), 'boilerplate', '**', '*.*')], { dot: true })
         .pipe(replace('<%- proxy %>', CLI.proxy))
         .pipe(replace('<%- port %>', CLI.port || 8300))
-        .pipe(replace('<%- tech %>', CLI.tech.toLowerCase()))
-        .pipe(gulpIf('*.csstech', rename({
-            extname: `.${CLI.tech}`
-        })))
         .pipe(gulp.dest(process.cwd()));
 
     stream.on('end', function () {
 
-        console.log(boxen(`${chalk.bold.yellow(pkg.name.toUpperCase())}} v${pkg.version}\nBoilerplate successfully copied`, {
+        console.log(boxen(`${chalk.bold.yellow(pkg.name.toUpperCase())} v${pkg.version}\nBoilerplate successfully copied`, {
                 padding: 1,
                 margin: 1,
                 borderStyle: 'double',
@@ -294,33 +265,25 @@ gulp.task('copy-boilerplate', function(done) {
 
 
 const init = () => {
+    if (fs.existsSync('config.js')) {
+        config = require(process.cwd() + '/config.js');
 
-    fs.exists('config.js', (exist) => {
-
-        if (exist) {
-
-            config = require(process.cwd() + '/config.js');
-
-            if (CLI.port) {
-                config.bs.port = CLI.port;
-            }
-
-            Object.assign(config.bs, {
-                open : CLI.open
-            });
-
-            bs.use(require('bs-latency'), {
-                routes: config.bs.latencyRoutes || []
-            });
-
-            gulp.start('start');
-
-        } else {
-
-            gulp.start('copy-boilerplate');
+        if (CLI.port) {
+            config.bs.port = CLI.port;
         }
 
-    });
+        Object.assign(config.bs, {
+            open: CLI.open
+        });
+
+        bs.use(require('bs-latency'), {
+            routes: config.bs.latencyRoutes || []
+        });
+
+        gulp.series('proxy-start', 'styles', 'scripts', 'iconizer', 'beml', 'watch')();
+    } else {
+        gulp.series('copy-boilerplate')();
+    }
 }
 
 init();

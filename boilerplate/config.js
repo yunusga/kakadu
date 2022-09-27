@@ -18,11 +18,11 @@ const globalWatch = path.join('*.{js,json,html}');
 
 // CSS
 const css = {
-    tech : '<%- tech %>',
-    watch: path.join('.', '**', '*.{styl,scss,less}'),
+    tech : 'styl',
+    watch: path.join('.', '**', '*.{styl}'),
     src  : [
-        path.join('.', '*.{styl,scss,less}'),
-        path.join(folders.source, folders.styles, '*.{styl,scss,less}'),
+        path.join('.', '*.{styl}'),
+        path.join(folders.source, folders.styles, '*.{styl}'),
     ],
     dest : './'
 };
@@ -129,18 +129,18 @@ const browserSync = {
         }
     },
     rewriteRules : [
-        {
-            match : /<body[\s\S]*?>/g,
-            fn : (req, res, match) => {
+        // {
+        //     match : /<body[\s\S]*?>/g,
+        //     fn : (req, res, match) => {
 
-                let sprite = fs
-                    .readFileSync(iconizer.spritePath)
-                    .toString()
-                    .replace(/(['"])[\s\S]*?\1/, (match) => `${match} class="app-svg-sprite"`);
+        //         let sprite = fs
+        //             .readFileSync(iconizer.spritePath)
+        //             .toString()
+        //             .replace(/(['"])[\s\S]*?\1/, (match) => `${match} class="app-svg-sprite"`);
 
-                return match + sprite;
-            }
-        },
+        //         return match + sprite;
+        //     }
+        // },
         {
             match : /What/g,
             fn : function (req, res, match) {
