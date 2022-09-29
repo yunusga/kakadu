@@ -2,6 +2,8 @@
 
 const path = require('path');
 const fs   = require('fs');
+const os              = require('os');
+const isWin           = os.platform() === 'win32';
 
 // folders names
 const folders = {
@@ -19,11 +21,8 @@ const globalWatch = path.join('*.{js,json,html}');
 // CSS
 const css = {
     tech : 'styl',
-    watch: path.join('.', '**', '*.{styl}'),
-    src  : [
-        path.join('.', '*.{styl}'),
-        path.join(folders.source, folders.styles, '*.{styl}'),
-    ],
+    watch: path.join('.', '**', '*.styl'),
+    src : [path.join('.', '*.styl'), (isWin) ? path.join(folders.source, folders.styles, '*.styl').replace(/\\/g,'/') : path.join(folders.source, folders.styles, '*.styl')],
     dest : './'
 };
 

@@ -90,7 +90,7 @@ const stylePreProcessor = (tech) => {
 }
 
 
-gulp.task('styles', () => {
+gulp.task('styles', (done) => {
 
     let plugins = [
         focus(),
@@ -115,6 +115,8 @@ gulp.task('styles', () => {
         .pipe(postcss(plugins))
         .pipe(gulp.dest(config.css.dest))
         .pipe(bs.stream());
+
+    done()
 });
 
 
@@ -211,19 +213,22 @@ gulp.task('watch', (done) => {
 
     /* CSS */
     watch(config.css.watch, batch((events, done) => {
-        gulp.start('styles', done);
+        gulp.series('styles')();
+        done()
     }));
 
     /**
      * BEML
      */
     watch(config.components.src, batch((events, done) => {
-        gulp.start('beml', done);
+        gulp.series('beml')();
+        done()
     }));
 
     /* ICONIZER */
     watch(path.join(config.iconizer.src), batch(function (events, done) {
-        runSequence('iconizer', 'beml', done);
+        gulp.series('iconizer', 'beml')();
+        done()
     }));
 
     /* GLOBAL WATCH */
@@ -280,7 +285,8 @@ const init = () => {
             routes: config.bs.latencyRoutes || []
         });
 
-        gulp.series('proxy-start', 'styles', 'scripts', 'iconizer', 'beml', 'watch')();
+        const series = gulp.series('proxy-start', 'styles', 'scripts', 'iconizer', 'beml', 'watch');
+        series();
     } else {
         gulp.series('copy-boilerplate')();
     }
